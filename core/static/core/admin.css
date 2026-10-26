@@ -1,0 +1,534 @@
+
+/* =========================================
+   CAF-NEXA — CUSTOM DJANGO ADMIN
+   ========================================= */
+
+:root {
+    --cn-navy: #1d293b;
+    --cn-navy-light: #29384e;
+    --cn-gold: #c99450;
+    --cn-gold-hover: #b47c38;
+    --cn-bg: #f4f6fa;
+    --cn-white: #ffffff;
+    --cn-text: #263347;
+    --cn-muted: #8290a4;
+    --cn-border: #e5eaf2;
+    --cn-green: #16835d;
+    --cn-radius: 12px;
+}
+
+/* Main page */
+
+html,
+body {
+    background: var(--cn-bg) !important;
+    color: var(--cn-text) !important;
+    font-family: "Segoe UI", Arial, sans-serif !important;
+}
+
+body {
+    font-size: 14px;
+}
+
+#container {
+    background: var(--cn-bg);
+    min-height: 100vh;
+}
+
+#main {
+    background: var(--cn-bg);
+}
+
+#content {
+    max-width: 1500px;
+    padding: 30px 32px;
+    margin: 0 auto;
+    box-sizing: border-box;
+}
+
+#content-main {
+    min-width: 0;
+}
+
+/* Header and branding */
+
+#header {
+    min-height: 76px;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    padding: 12px 30px;
+    background: var(--cn-navy) !important;
+    color: white !important;
+    border-bottom: 3px solid var(--cn-gold);
+    box-shadow: 0 4px 15px rgba(25, 39, 59, 0.12);
+}
+
+#branding {
+    display: flex;
+    align-items: center;
+}
+
+#site-name {
+    margin: 0;
+}
+
+#site-name a.cafnexa-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    color: white !important;
+    text-decoration: none;
+}
+
+.cafnexa-logo {
+    width: 43px;
+    height: 43px;
+    display: inline-grid;
+    place-items: center;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #e2b66e, #bd8642);
+    color: #202b3d;
+    font-size: 25px;
+    font-weight: 800;
+}
+
+.cafnexa-brand-text {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.cafnexa-brand-text strong {
+    font-size: 21px;
+    letter-spacing: -0.5px;
+    font-weight: 750;
+}
+
+.cafnexa-brand-text small {
+    color: #d2d9e4;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 1.6px;
+}
+
+/* Header links */
+
+#user-tools {
+    color: #dce3ed !important;
+    font-size: 11px;
+    line-height: 1.8;
+}
+
+#user-tools a {
+    color: #f0c783 !important;
+    border-bottom-color: #8d744e !important;
+}
+
+#user-tools a:hover {
+    color: white !important;
+}
+
+/* Breadcrumb navigation */
+
+div.breadcrumbs {
+    padding: 13px 32px;
+    background: #fff !important;
+    color: var(--cn-muted) !important;
+    border-bottom: 1px solid var(--cn-border);
+    font-size: 12px;
+}
+
+div.breadcrumbs a {
+    color: #5274b9 !important;
+}
+
+div.breadcrumbs a:hover {
+    color: var(--cn-gold-hover) !important;
+}
+
+/* Headings */
+
+#content h1 {
+    margin: 0 0 24px;
+    color: var(--cn-text);
+    font-size: 29px;
+    font-weight: 750;
+    letter-spacing: -0.8px;
+}
+
+#content h2 {
+    color: var(--cn-text);
+    font-size: 17px;
+    font-weight: 700;
+}
+
+#content h3 {
+    color: var(--cn-text);
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.module h2,
+.module caption,
+.inline-group h2 {
+    padding: 14px 17px !important;
+    background: var(--cn-navy) !important;
+    color: white !important;
+    border-radius: 9px 9px 0 0;
+    font-size: 12px !important;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+/* Dashboard model groups */
+
+#content-main .module {
+    margin-bottom: 23px;
+    overflow: hidden;
+    border: 1px solid var(--cn-border);
+    border-radius: var(--cn-radius);
+    background: white !important;
+    box-shadow: 0 4px 18px rgba(29, 41, 59, 0.035);
+}
+
+.module table {
+    width: 100%;
+}
+
+.module th,
+.module td {
+    padding: 13px 15px !important;
+    border-bottom: 1px solid #edf0f5;
+}
+
+.module tr:last-child th,
+.module tr:last-child td {
+    border-bottom: 0;
+}
+
+.module th a {
+    color: #3c5e9c !important;
+    font-weight: 650;
+}
+
+.module th a:hover {
+    color: var(--cn-gold-hover) !important;
+}
+
+.module td a {
+    color: #60718a !important;
+}
+
+.module td a:hover {
+    color: var(--cn-gold-hover) !important;
+}
+
+/* Recent actions panel */
+
+#content-related {
+    margin-top: 0;
+}
+
+#content-related .module {
+    overflow: hidden;
+    border: 1px solid var(--cn-border);
+    border-radius: var(--cn-radius);
+    background: white !important;
+    box-shadow: 0 4px 18px rgba(29, 41, 59, 0.035);
+}
+
+#content-related h2 {
+    padding: 16px;
+    background: var(--cn-navy) !important;
+    color: white !important;
+}
+
+#content-related h3 {
+    padding: 0 16px;
+}
+
+#content-related ul {
+    padding: 0 16px 16px;
+}
+
+#content-related li {
+    padding: 7px 0;
+    color: var(--cn-muted);
+}
+
+#content-related a {
+    color: #5274b9 !important;
+}
+
+/* Buttons */
+
+.button,
+input[type="submit"],
+input[type="button"],
+.submit-row input,
+a.button,
+.object-tools a,
+button {
+    min-height: 36px;
+    padding: 9px 15px !important;
+    border: 0 !important;
+    border-radius: 8px !important;
+    background: var(--cn-navy) !important;
+    color: white !important;
+    font-size: 12px !important;
+    font-weight: 650 !important;
+    box-shadow: none !important;
+    cursor: pointer;
+    transition: background 0.18s, transform 0.18s;
+}
+
+.button:hover,
+input[type="submit"]:hover,
+input[type="button"]:hover,
+.submit-row input:hover,
+a.button:hover,
+.object-tools a:hover,
+button:hover {
+    background: var(--cn-navy-light) !important;
+    color: white !important;
+}
+
+input[type="submit"].default,
+.submit-row input.default,
+.object-tools li a.addlink {
+    background: var(--cn-gold) !important;
+    color: #fff !important;
+}
+
+input[type="submit"].default:hover,
+.submit-row input.default:hover,
+.object-tools li a.addlink:hover {
+    background: var(--cn-gold-hover) !important;
+}
+
+/* Form inputs */
+
+input:not([type="checkbox"]):not([type="radio"]):not([type="submit"]):not([type="button"]),
+textarea,
+select,
+.vTextField,
+.vLargeTextField {
+    max-width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #dfe5ee;
+    border-radius: 8px;
+    background: white;
+    color: var(--cn-text);
+    font: inherit;
+    box-sizing: border-box;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+    outline: none;
+    border-color: #b88a4e !important;
+    box-shadow: 0 0 0 3px rgba(201, 148, 80, 0.12) !important;
+}
+
+label {
+    color: #4c5b70;
+    font-weight: 650;
+}
+
+/* Change lists and data tables */
+
+#changelist {
+    border: 1px solid var(--cn-border);
+    border-radius: var(--cn-radius);
+    overflow: hidden;
+    background: white;
+    box-shadow: 0 4px 18px rgba(29, 41, 59, 0.035);
+}
+
+#changelist-filter {
+    background: #fff;
+    border-left: 1px solid var(--cn-border);
+}
+
+#changelist-filter h2 {
+    padding: 15px;
+    background: var(--cn-navy) !important;
+    color: white !important;
+}
+
+#changelist-filter h3 {
+    color: var(--cn-text);
+}
+
+#changelist-filter li.selected a {
+    color: var(--cn-gold-hover) !important;
+    font-weight: 700;
+}
+
+#changelist table {
+    border-collapse: collapse;
+    background: white;
+}
+
+#changelist table thead th {
+    padding: 13px 12px;
+    background: #f6f8fc;
+    color: #6b788d;
+    border-bottom: 1px solid var(--cn-border);
+    font-size: 10px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+#changelist table thead th a {
+    color: #52647e !important;
+}
+
+#changelist table tbody td,
+#changelist table tbody th {
+    padding: 13px 12px;
+    border-bottom: 1px solid #edf0f5;
+    vertical-align: middle;
+}
+
+#changelist table tbody tr:hover {
+    background: #f7f9fd;
+}
+
+#changelist table tbody th a,
+#changelist table tbody td a {
+    color: #4568a8 !important;
+    font-weight: 600;
+}
+
+#changelist .paginator {
+    padding: 15px;
+    background: #fafbfd;
+    border-top: 1px solid var(--cn-border);
+}
+
+/* Search bar */
+
+#toolbar {
+    padding: 16px;
+    background: #fff;
+    border-bottom: 1px solid var(--cn-border);
+}
+
+#toolbar form {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+/* Edit forms */
+
+.form-row {
+    padding: 17px 18px;
+    border-bottom: 1px solid #edf0f5;
+}
+
+fieldset {
+    margin-bottom: 22px !important;
+    border: 1px solid var(--cn-border) !important;
+    border-radius: var(--cn-radius);
+    background: #fff;
+}
+
+fieldset h2 {
+    margin: 0 !important;
+}
+
+fieldset .description,
+.help,
+.helptext {
+    color: var(--cn-muted) !important;
+    font-size: 11px;
+    line-height: 1.6;
+}
+
+.submit-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 9px;
+    padding: 15px !important;
+    border: 1px solid var(--cn-border);
+    border-radius: var(--cn-radius);
+    background: white !important;
+}
+
+/* Success and error messages */
+
+ul.messagelist {
+    margin: 0 0 20px;
+    padding: 0;
+}
+
+ul.messagelist li {
+    margin: 8px 0;
+    padding: 13px 16px 13px 43px;
+    border: 1px solid #d9f0e4;
+    border-radius: 9px;
+    background-color: #effaf4;
+    color: #18734f;
+    box-shadow: none;
+}
+
+.errornote,
+.errorlist,
+ul.errorlist li {
+    border-radius: 8px;
+}
+
+.errornote {
+    padding: 13px;
+}
+
+/* Selection and deletion confirmation */
+
+.delete-confirmation form input[type="submit"] {
+    background: #c7464e !important;
+}
+
+.delete-confirmation form input[type="submit"]:hover {
+    background: #a82e37 !important;
+}
+
+/* Responsive layout */
+
+@media (max-width: 767px) {
+    #header {
+        padding: 12px 16px;
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    #user-tools {
+        margin: 0;
+    }
+
+    #content {
+        padding: 22px 15px;
+    }
+
+    #content h1 {
+        font-size: 24px;
+    }
+
+    div.breadcrumbs {
+        padding: 12px 16px;
+    }
+
+    #content-related {
+        margin-top: 22px;
+    }
+
+    #changelist {
+        overflow-x: auto;
+    }
+}

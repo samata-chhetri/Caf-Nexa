@@ -1,0 +1,241 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }} | Caf-Nexa</title>
+    <link rel="stylesheet" href="{% static 'core/dashboard.css' %}">
+    <link rel="stylesheet" href="{% static 'core/workspace.css' %}">
+</head>
+<body>
+<div class="app-layout">
+
+    <aside class="sidebar">
+        <a href="/" class="brand">
+            <span class="brand-icon">C</span>
+            <span>
+                <strong>Caf-Nexa</strong>
+                <small>RESTAURANT POS</small>
+            </span>
+        </a>
+
+        <div class="nav-label">WORKSPACE</div>
+        <nav class="navigation">
+            <a href="/" class="nav-link {% if active_page == 'dashboard' %}active{% endif %}">
+                <span class="nav-icon">▦</span> Dashboard
+            </a>
+            <a href="/tables/" class="nav-link {% if active_page == 'tables' %}active{% endif %}">
+                <span class="nav-icon">▤</span> Table Management
+            </a>
+            <a href="/menu/" class="nav-link {% if active_page == 'menu' %}active{% endif %}">
+                <span class="nav-icon">☷</span> Menu &amp; Orders
+            </a>
+            <a href="/kitchen/" class="nav-link {% if active_page == 'kitchen' %}active{% endif %}">
+                <span class="nav-icon">♨</span> Kitchen Tickets
+            </a>
+            <a href="/inventory/" class="nav-link {% if active_page == 'inventory' %}active{% endif %}">
+                <span class="nav-icon">▣</span> Inventory
+            </a>
+            <a href="/billing/" class="nav-link {% if active_page == 'billing' %}active{% endif %}">
+                <span class="nav-icon">₹</span> Billing &amp; Payments
+            </a>
+            <a href="/reports/" class="nav-link {% if active_page == 'reports' %}active{% endif %}">
+                <span class="nav-icon">▥</span> Analytics
+            </a>
+            <a href="/admin/" class="nav-link">
+                <span class="nav-icon">⚙</span> Administration
+            </a>
+        </nav>
+
+        <div class="sidebar-bottom">
+            <div class="online-dot"></div>
+            <div>
+                <strong>System online</strong>
+                <small>Caf-Nexa POS</small>
+            </div>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <header class="topbar">
+            <div class="breadcrumb">Workspace <span>/</span> {{ title }}</div>
+            <a href="/admin/" class="admin-link">
+                <span class="avatar">A</span>
+                <span class="admin-text">
+                    <strong>Administrator</strong>
+                    <small>Manage restaurant</small>
+                </span>
+                <span class="chevron">⌄</span>
+            </a>
+        </header>
+
+        <section class="page-content">
+            <div class="welcome-row">
+                <div>
+                    <p class="eyebrow">RESTAURANT OPERATIONS</p>
+                    <h1>{{ title }}</h1>
+                    <p class="subtitle">{{ description }}</p>
+                </div>
+                <div class="date-chip">
+                    <span>◷</span> Operations workspace
+                </div>
+            </div>
+
+            <section class="workspace-metrics">
+                <article class="workspace-metric">
+                    <span class="metric-icon purple">▦</span>
+                    <span class="metric-label">{{ metric_one_label }}</span>
+                    <strong>{{ metric_one_value }}</strong>
+                    <small>{{ metric_one_note }}</small>
+                </article>
+
+                <article class="workspace-metric">
+                    <span class="metric-icon green">✓</span>
+                    <span class="metric-label">{{ metric_two_label }}</span>
+                    <strong>{{ metric_two_value }}</strong>
+                    <small>{{ metric_two_note }}</small>
+                </article>
+
+                <article class="workspace-metric">
+                    <span class="metric-icon amber">◷</span>
+                    <span class="metric-label">{{ metric_three_label }}</span>
+                    <strong>{{ metric_three_value }}</strong>
+                    <small>{{ metric_three_note }}</small>
+                </article>
+            </section>
+
+            <section class="panel workspace-main-panel">
+                <div class="panel-heading">
+                    <div>
+                        <h2>{{ section_title }}</h2>
+                        <p>{{ section_description }}</p>
+                    </div>
+                    <span class="workspace-section-icon">{{ section_icon }}</span>
+                </div>
+
+                {% if active_page == 'menu' %}
+                    <div class="workspace-action-grid">
+                        <a class="workspace-action" href="/admin/menu/category/">
+                            <span class="action-icon purple">☷</span>
+                            <strong>Menu categories</strong>
+                            <small>Organise food and beverage categories.</small>
+                            <span class="text-link">Manage categories →</span>
+                        </a>
+                        <a class="workspace-action" href="/admin/menu/menuitem/">
+                            <span class="action-icon green">＋</span>
+                            <strong>Menu items</strong>
+                            <small>Manage item names, prices and availability.</small>
+                            <span class="text-link">Manage items →</span>
+                        </a>
+                        <a class="workspace-action" href="/admin/orders/order/">
+                            <span class="action-icon amber">▤</span>
+                            <strong>Restaurant orders</strong>
+                            <small>View orders recorded in the system.</small>
+                            <span class="text-link">View orders →</span>
+                        </a>
+                    </div>
+
+                {% elif active_page == 'kitchen' %}
+                    <div class="workspace-action-grid">
+                        <a class="workspace-action" href="/admin/orders/kitchenticket/">
+                            <span class="action-icon amber">♨</span>
+                            <strong>Kitchen tickets</strong>
+                            <small>Review kitchen and preparation tickets.</small>
+                            <span class="text-link">Open tickets →</span>
+                        </a>
+                        <a class="workspace-action" href="/admin/orders/order/">
+                            <span class="action-icon purple">▤</span>
+                            <strong>Order queue</strong>
+                            <small>Review recorded restaurant orders.</small>
+                            <span class="text-link">View orders →</span>
+                        </a>
+                    </div>
+
+                {% elif active_page == 'inventory' %}
+                    <div class="workspace-action-grid">
+                        <a class="workspace-action" href="/admin/inventory/ingredient/">
+                            <span class="action-icon green">▣</span>
+                            <strong>Ingredients</strong>
+                            <small>Review ingredient stock and reorder levels.</small>
+                            <span class="text-link">Manage ingredients →</span>
+                        </a>
+                        <a class="workspace-action" href="/admin/inventory/stockitem/">
+                            <span class="action-icon purple">▤</span>
+                            <strong>Stock items</strong>
+                            <small>Manage food, beverages and other stock.</small>
+                            <span class="text-link">Manage stock →</span>
+                        </a>
+                        <a class="workspace-action" href="/admin/inventory/stockmovement/">
+                            <span class="action-icon amber">↕</span>
+                            <strong>Stock movements</strong>
+                            <small>Review recorded inventory movements.</small>
+                            <span class="text-link">View movements →</span>
+                        </a>
+                    </div>
+
+                {% elif active_page == 'billing' %}
+                    <div class="workspace-action-grid">
+                        <a class="workspace-action" href="/admin/billing/bill/">
+                            <span class="action-icon purple">₹</span>
+                            <strong>Bills</strong>
+                            <small>Review bills recorded for restaurant orders.</small>
+                            <span class="text-link">Manage bills →</span>
+                        </a>
+                        <a class="workspace-action" href="/admin/billing/payment/">
+                            <span class="action-icon green">✓</span>
+                            <strong>Payments</strong>
+                            <small>Review recorded payment entries.</small>
+                            <span class="text-link">View payments →</span>
+                        </a>
+                        <a class="workspace-action" href="/admin/billing/billsplit/">
+                            <span class="action-icon amber">⇄</span>
+                            <strong>Bill splitting</strong>
+                            <small>Review saved bill splits.</small>
+                            <span class="text-link">Manage splits →</span>
+                        </a>
+                    </div>
+
+                {% elif active_page == 'reports' %}
+                    <div class="workspace-action-grid">
+                        <a class="workspace-action" href="/admin/billing/bill/">
+                            <span class="action-icon green">₹</span>
+                            <strong>Revenue records</strong>
+                            <small>Review recorded bills and totals.</small>
+                            <span class="text-link">Review bills →</span>
+                        </a>
+                        <a class="workspace-action" href="/admin/menu/menuitem/">
+                            <span class="action-icon purple">★</span>
+                            <strong>Menu performance</strong>
+                            <small>Review menu items and their prices.</small>
+                            <span class="text-link">Review menu →</span>
+                        </a>
+                        <a class="workspace-action" href="/admin/orders/order/">
+                            <span class="action-icon amber">▥</span>
+                            <strong>Order records</strong>
+                            <small>Inspect recorded restaurant orders.</small>
+                            <span class="text-link">Review orders →</span>
+                        </a>
+                    </div>
+
+                {% endif %}
+
+                <div class="workspace-notice">
+                    <span class="notice-symbol">i</span>
+                    <div>
+                        <strong>Workspace setup</strong>
+                        <p>{{ setup_message }}</p>
+                    </div>
+                </div>
+            </section>
+
+            <footer class="page-footer">
+                <span>© Caf-Nexa · Restaurant Management System</span>
+                <span><i class="status-dot green-dot"></i> Workspace ready</span>
+            </footer>
+        </section>
+    </main>
+</div>
+</body>
+</html>

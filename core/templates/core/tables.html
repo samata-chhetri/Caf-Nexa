@@ -1,57 +1,240 @@
 
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Table Management</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-          rel="stylesheet">
-    <style>
-        body { background: #f4f6f9; padding: 30px; }
-        .table-card {
-            background: white;
-            padding: 22px;
-            border-radius: 12px;
-            border: 1px solid #ddd;
-            border-top: 5px solid #16a34a;
-        }
-        .occupied { border-top-color: #dc2626; }
-        .bill { border-top-color: #f59e0b; }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Table Management | Caf-Nexa</title>
+    <link rel="stylesheet" href="{% static 'core/dashboard.css' %}">
+    <link rel="stylesheet" href="{% static 'core/tables.css' %}">
 </head>
 <body>
-    <div class="container">
-        <h1>Restaurant Table Management</h1>
-        <p class="text-secondary">
-            Table status from your Django database
-        </p>
+<div class="app-layout">
 
-        <a href="/" class="btn btn-dark mb-4">Back to Dashboard</a>
-        <a href="/admin/core/restauranttable/add/"
-           class="btn btn-primary mb-4">Add Table</a>
+    <aside class="sidebar">
+        <a href="/" class="brand">
+            <span class="brand-icon">C</span>
+            <span>
+                <strong>Caf-Nexa</strong>
+                <small>RESTAURANT POS</small>
+            </span>
+        </a>
 
-        <div class="row g-3">
-            {% for table in tables %}
-                <div class="col-6 col-md-3">
-                    <div class="table-card
-                        {% if table.status == 'OCCUPIED' %}occupied
-                        {% elif table.status == 'BILL_REQUESTED' %}bill
-                        {% endif %}">
-                        <h4>Table {{ table.table_number }}</h4>
-                        <p>Capacity: {{ table.capacity }}</p>
-                        <strong>{{ table.get_status_display }}</strong>
-                    </div>
-                </div>
-            {% empty %}
-                <div class="col-12">
-                    <div class="alert alert-info">
-                        No tables have been added yet.
-                        Use Add Table to create your first table.
-                    </div>
-                </div>
-            {% endfor %}
+        <div class="nav-label">WORKSPACE</div>
+        <nav class="navigation">
+            <a href="/" class="nav-link"><span class="nav-icon">▦</span> Dashboard</a>
+            <a href="/tables/" class="nav-link active"><span class="nav-icon">▤</span> Table Management</a>
+            <a href="/menu/" class="nav-link"><span class="nav-icon">☷</span> Menu &amp; Orders</a>
+            <a href="/kitchen/" class="nav-link"><span class="nav-icon">♨</span> Kitchen Tickets</a>
+            <a href="/inventory/" class="nav-link"><span class="nav-icon">▣</span> Inventory</a>
+            <a href="/billing/" class="nav-link"><span class="nav-icon">₹</span> Billing &amp; Payments</a>
+            <a href="/reports/" class="nav-link"><span class="nav-icon">▥</span> Analytics</a>
+            <a href="/admin/" class="nav-link"><span class="nav-icon">⚙</span> Administration</a>
+        </nav>
+
+        <div class="sidebar-bottom">
+            <div class="online-dot"></div>
+            <div>
+                <strong>System online</strong>
+                <small>Caf-Nexa POS</small>
+            </div>
         </div>
-    </div>
+    </aside>
+
+    <main class="main-content">
+        <header class="topbar">
+            <div class="breadcrumb">Workspace <span>/</span> Table Management</div>
+            <a href="/admin/" class="admin-link">
+                <span class="avatar">A</span>
+                <span class="admin-text">
+                    <strong>Administrator</strong>
+                    <small>Manage restaurant</small>
+                </span>
+                <span class="chevron">⌄</span>
+            </a>
+        </header>
+
+        <section class="page-content">
+
+            <div class="welcome-row">
+                <div>
+                    <p class="eyebrow">RESTAURANT OPERATIONS</p>
+                    <h1>Table Management</h1>
+                    <p class="subtitle">Manage seating, check table availability and keep service moving.</p>
+                </div>
+                <a class="add-table-button" href="/admin/core/restauranttable/add/">
+                    <span>＋</span> Add new table
+                </a>
+            </div>
+
+            <section class="table-stats">
+                <article class="table-stat">
+                    <div class="table-stat-top">
+                        <span class="table-stat-icon purple-bg">▤</span>
+                        <span class="stat-caption">ALL TABLES</span>
+                    </div>
+                    <strong>{{ total_tables }}</strong>
+                    <p>Total active tables</p>
+                </article>
+
+                <article class="table-stat">
+                    <div class="table-stat-top">
+                        <span class="table-stat-icon green-bg">✓</span>
+                        <span class="stat-caption">AVAILABLE</span>
+                    </div>
+                    <strong>{{ available_tables }}</strong>
+                    <p>Ready for new guests</p>
+                </article>
+
+                <article class="table-stat">
+                    <div class="table-stat-top">
+                        <span class="table-stat-icon red-bg">♟</span>
+                        <span class="stat-caption">OCCUPIED</span>
+                    </div>
+                    <strong>{{ occupied_tables }}</strong>
+                    <p>Currently serving guests</p>
+                </article>
+
+                <article class="table-stat">
+                    <div class="table-stat-top">
+                        <span class="table-stat-icon amber-bg">₹</span>
+                        <span class="stat-caption">BILL REQUESTED</span>
+                    </div>
+                    <strong>{{ bill_requested_tables }}</strong>
+                    <p>Waiting for payment</p>
+                </article>
+            </section>
+
+            <section class="table-workspace">
+                <div class="table-workspace-heading">
+                    <div>
+                        <h2>Restaurant floor</h2>
+                        <p>View the status and seating capacity of each table.</p>
+                    </div>
+                    <span class="live-label"><i></i> Database connected</span>
+                </div>
+
+                <div class="table-toolbar">
+                    <div class="table-search">
+                        <span>⌕</span>
+                        <input id="tableSearch" type="search" placeholder="Search by table number..." aria-label="Search tables">
+                    </div>
+
+                    <select id="statusFilter" aria-label="Filter tables by status">
+                        <option value="all">All statuses</option>
+                        <option value="AVAILABLE">Available</option>
+                        <option value="OCCUPIED">Occupied</option>
+                        <option value="BILL_REQUESTED">Bill requested</option>
+                    </select>
+                </div>
+
+                {% if tables %}
+                <div class="restaurant-table-grid" id="tableGrid">
+                    {% for table in tables %}
+                    <article class="restaurant-table-card"
+                        data-number="{{ table.table_number }}"
+                        data-status="{{ table.status }}">
+
+                        <div class="restaurant-table-card-header">
+                            <span class="table-illustration
+                                {% if table.status == 'AVAILABLE' %}illustration-available
+                                {% elif table.status == 'OCCUPIED' %}illustration-occupied
+                                {% else %}illustration-requested{% endif %}">
+                                <svg viewBox="0 0 64 64" aria-hidden="true">
+                                    <rect x="17" y="17" width="30" height="30" rx="7"/>
+                                    <path d="M32 7v10M32 47v10M7 32h10M47 32h10"/>
+                                    <circle cx="32" cy="32" r="5"/>
+                                </svg>
+                            </span>
+
+                            <span class="table-id">T{{ table.table_number|stringformat:"02d" }}</span>
+                        </div>
+
+                        <h3>Table {{ table.table_number }}</h3>
+                        <p class="seat-count">
+                            <span>♧</span> {{ table.capacity }} seats
+                        </p>
+
+                        <div class="table-card-divider"></div>
+
+                        <div class="table-card-footer">
+                            <span class="status-pill
+                                {% if table.status == 'AVAILABLE' %}pill-available
+                                {% elif table.status == 'OCCUPIED' %}pill-occupied
+                                {% else %}pill-requested{% endif %}">
+                                <i></i>
+                                {{ table.get_status_display }}
+                            </span>
+                            <a href="/admin/core/restauranttable/{{ table.pk }}/change/"
+                               class="edit-table-link"
+                               aria-label="Edit table {{ table.table_number }}"
+                               title="Edit table">↗</a>
+                        </div>
+                    </article>
+                    {% endfor %}
+                </div>
+
+                <div id="noSearchResults" class="empty-state" hidden>
+                    <span>⌕</span>
+                    <h3>No matching tables</h3>
+                    <p>Try another table number or status filter.</p>
+                </div>
+
+                {% else %}
+                <div class="empty-state">
+                    <span>▤</span>
+                    <h3>No tables have been added yet</h3>
+                    <p>Add your first restaurant table to get started.</p>
+                    <a class="add-table-button" href="/admin/core/restauranttable/add/">＋ Add your first table</a>
+                </div>
+                {% endif %}
+
+                <div class="table-workspace-footer">
+                    <span>Showing <strong id="visibleCount">{{ tables|length }}</strong> of {{ tables|length }} active tables</span>
+                    <a href="/admin/core/restauranttable/" class="manage-records-link">Manage all records →</a>
+                </div>
+            </section>
+
+            <footer class="page-footer">
+                <span>© Caf-Nexa · Restaurant Management System</span>
+                <span><i class="status-dot green-dot"></i> Workspace ready</span>
+            </footer>
+
+        </section>
+    </main>
+</div>
+
+<script>
+    const searchInput = document.getElementById("tableSearch");
+    const statusFilter = document.getElementById("statusFilter");
+    const tableCards = Array.from(document.querySelectorAll(".restaurant-table-card"));
+    const visibleCount = document.getElementById("visibleCount");
+    const noResults = document.getElementById("noSearchResults");
+
+    function filterTables() {
+        const query = searchInput.value.trim().toLowerCase();
+        const status = statusFilter.value;
+        let visible = 0;
+
+        tableCards.forEach(card => {
+            const number = card.dataset.number.toLowerCase();
+            const matchesSearch = number.includes(query) ||
+                ("table " + number).includes(query) ||
+                ("t" + number.padStart(2, "0")).includes(query);
+            const matchesStatus = status === "all" || card.dataset.status === status;
+            const show = matchesSearch && matchesStatus;
+
+            card.hidden = !show;
+            if (show) visible++;
+        });
+
+        visibleCount.textContent = visible;
+        if (noResults) noResults.hidden = visible !== 0;
+    }
+
+    searchInput.addEventListener("input", filterTables);
+    statusFilter.addEventListener("change", filterTables);
+</script>
 </body>
 </html>

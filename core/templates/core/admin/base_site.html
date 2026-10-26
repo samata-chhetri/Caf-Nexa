@@ -1,0 +1,22 @@
+
+{% extends "admin/base.html" %}
+{% load static %}
+
+{% block title %}Caf-Nexa Administration{% endblock %}
+
+{% block branding %}
+<div id="site-name">
+    <a href="{% url 'admin:index' %}" class="cafnexa-brand">
+        <span class="cafnexa-logo">C</span>
+        <span class="cafnexa-brand-text">
+            <strong>Caf-Nexa</strong>
+            <small>RESTAURANT MANAGEMENT</small>
+        </span>
+    </a>
+</div>
+{% endblock %}
+
+{% block extrastyle %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static 'core/admin.css' %}">
+{% endblock %}
