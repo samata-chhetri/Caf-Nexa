@@ -1,3 +1,5 @@
+from django.db.models import F
+from inventory.models import Ingredient, StockItem
 
 from django.shortcuts import render
 from .models import RestaurantTable
@@ -100,20 +102,61 @@ def kitchen_page(request):
     )
 
 
+
 def inventory_page(request):
-    return module_placeholder(
-        request, "Inventory",
-        "Monitor ingredients, stock levels and supplies.",
-        "inventory", "Stock management",
-        "Manage inventory records from one workspace.", "▣",
-        [
-            ("Ingredients", "—", "Stock totals not connected"),
-            ("Stock items", "—", "Stock totals not connected"),
-            ("Low stock", "—", "Alerts not implemented"),
-        ],
-        "Stock deduction, low-stock alerts and inventory "
-        "calculations still need to be connected.",
+
+    ingredients = Ingredient.objects.all().order_by("name")
+
+    stock_items = StockItem.objects.filter(
+        is_active=True
+    ).order_by("name")
+
+    total_ingredients = ingredients.count()
+    total_stock_items = stock_items.count()
+
+    low_ingredient_count = ingredients.filter(
+        current_stock__lte=F("reorder_level")
+    ).count()
+
+    low_stock_item_count = stock_items.filter(
+        current_stock__lte=F("reorder_level")
+    ).count()
+
+    total_low_stock = (
+        low_ingredient_count + low_stock_item_count
     )
+
+    return module_placeholder(
+        request,
+        "Inventory",
+        "Monitor ingredients, stock levels and supplies.",
+        "inventory",
+        "Stock management",
+        "Manage your inventory records from one workspace.",
+        "▣",
+        [
+            (
+                "Ingredients",
+                total_ingredients,
+                "Registered ingredients"
+            ),
+            (
+                "Stock items",
+                total_stock_items,
+                "Active stock items"
+            ),
+            (
+                "Low stock",
+                total_low_stock,
+                "Items requiring replenishment"
+            ),
+        ],
+        (
+            "Inventory data is now connected. "
+            "Low-stock figures are calculated using reorder levels."
+        ),
+    )
+
 
 
 def billing_page(request):

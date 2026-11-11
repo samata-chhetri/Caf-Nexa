@@ -1,0 +1,209 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cafe Nexa | Inventory</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f5f3ef;
+            color: #302820;
+            padding: 30px;
+        }
+
+        h1 {
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            color: #80766c;
+            margin-bottom: 28px;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 18px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 22px;
+            border-radius: 12px;
+            box-shadow: 0 3px 12px #0000000a;
+        }
+
+        .stat-card p {
+            color: #80766c;
+            margin-bottom: 12px;
+        }
+
+        .stat-card h2 {
+            font-size: 30px;
+        }
+
+        .available { color: #24865b; }
+        .low { color: #d18a25; }
+        .out { color: #c34b42; }
+
+        .section {
+            background: white;
+            padding: 24px;
+            border-radius: 12px;
+            margin-bottom: 24px;
+        }
+
+        .section h2 {
+            margin-bottom: 18px;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 750px;
+        }
+
+        th, td {
+            padding: 14px;
+            text-align: left;
+            border-bottom: 1px solid #eee9e2;
+        }
+
+        th {
+            color: #80766c;
+            font-size: 13px;
+        }
+
+        .status {
+            padding: 6px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .status.available {
+            background: #e4f5ec;
+        }
+
+        .status.low {
+            background: #fff1d9;
+        }
+
+        .status.out {
+            background: #fde8e6;
+        }
+
+        .empty {
+            color: #80766c;
+            text-align: center;
+            padding: 30px;
+        }
+
+        @media(max-width: 800px) {
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media(max-width: 480px) {
+            body { padding: 15px; }
+            .stats { grid-template-columns: 1fr 1fr; }
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Inventory Management</h1>
+    <p class="subtitle">Monitor your cafe ingredients and stock levels.</p>
+
+    <div class="stats">
+
+        <div class="stat-card">
+            <p>Total Items</p>
+            <h2>{{ total_items }}</h2>
+        </div>
+
+        <div class="stat-card">
+            <p>Available Stock</p>
+            <h2 class="available">{{ available_stock }}</h2>
+        </div>
+
+        <div class="stat-card">
+            <p>Low Stock</p>
+            <h2 class="low">{{ low_stock }}</h2>
+        </div>
+
+        <div class="stat-card">
+            <p>Out of Stock</p>
+            <h2 class="out">{{ out_of_stock }}</h2>
+        </div>
+
+    </div>
+
+    <div class="section">
+        <h2>Inventory Items</h2>
+
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Item</th>
+                        <th>Category</th>
+                        <th>Quantity</th>
+                        <th>Minimum Stock</th>
+                        <th>Purchase Price</th>
+                        <th>Supplier</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for item in inventory_items %}
+                    <tr>
+                        <td>{{ item.name }}</td>
+                        <td>{{ item.category }}</td>
+                        <td>{{ item.quantity }} {{ item.unit }}</td>
+                        <td>{{ item.minimum_stock }} {{ item.unit }}</td>
+                        <td>₹{{ item.purchase_price }}</td>
+                        <td>{{ item.supplier|default:"—" }}</td>
+                        <td>
+                            {% if item.quantity <= 0 %}
+                                <span class="status out">Out of Stock</span>
+                            {% elif item.quantity <= item.minimum_stock %}
+                                <span class="status low">Low Stock</span>
+                            {% else %}
+                                <span class="status available">Available</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+
+                    {% empty %}
+                    <tr>
+                        <td colspan="7" class="empty">
+                            No inventory items added yet.
+                            Add items through Django Admin.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</body>
+</html>

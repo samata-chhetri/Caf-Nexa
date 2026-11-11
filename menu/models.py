@@ -160,3 +160,113 @@ class HappyHourRule(models.Model):
 
     def __str__(self):
         return self.name
+
+class InventoryItem(models.Model):
+
+    class Unit(models.TextChoices):
+        KG = "KG", "Kilogram"
+        GRAM = "GRAM", "Gram"
+        LITRE = "LITRE", "Litre"
+        ML = "ML", "Millilitre"
+        PIECES = "PIECES", "Pieces"
+        PACKETS = "PACKETS", "Packets"
+
+    name = models.CharField(max_length=100, unique=True)
+
+    category = models.CharField(max_length=100)
+
+    quantity = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        default=0
+    )
+
+    unit = models.CharField(
+        max_length=10,
+        choices=Unit.choices,
+        default=Unit.PIECES
+    )
+
+    minimum_stock = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        default=5
+    )
+
+    purchase_price = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        default=0
+    )
+
+    supplier = models.CharField(
+        max_length=150,
+        blank=True
+    )
+
+    last_updated = models.DateTimeField(auto_now=True)
+
+    is_active = models.BooleanField(default=True)
+
+    @property
+    def stock_status(self):
+        if self.quantity <= 0:
+            return "Out of Stock"
+        elif self.quantity <= self.minimum_stock:
+            return "Low Stock"
+        return "Available"
+
+    def __str__(self):
+        return self.name
+ 
+class InventoryItem(models.Model):
+
+    class Unit(models.TextChoices):
+        KG = "KG", "Kilogram"
+        GRAM = "GRAM", "Gram"
+        LITRE = "LITRE", "Litre"
+        ML = "ML", "Millilitre"
+        PIECES = "PIECES", "Pieces"
+        PACKETS = "PACKETS", "Packets"
+
+    name = models.CharField(max_length=100, unique=True)
+    category = models.CharField(max_length=100)
+
+    quantity = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        default=0
+    )
+
+    unit = models.CharField(
+        max_length=10,
+        choices=Unit.choices,
+        default=Unit.PIECES
+    )
+
+    minimum_stock = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        default=5
+    )
+
+    purchase_price = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        default=0
+    )
+
+    supplier = models.CharField(max_length=150, blank=True)
+    last_updated = models.DateTimeField(auto_now=True)
+    is_active = models.BooleanField(default=True)
+
+    @property
+    def stock_status(self):
+        if self.quantity <= 0:
+            return "Out of Stock"
+        elif self.quantity <= self.minimum_stock:
+            return "Low Stock"
+        return "Available"
+
+    def __str__(self):
+        return self.name
