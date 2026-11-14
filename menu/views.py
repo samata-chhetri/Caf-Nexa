@@ -1,19 +1,18 @@
-
-
 from django.shortcuts import render
-from django.db.models import F
-
-from .models import Category, MenuItem, InventoryItem
+from .models import Category, MenuItem
 
 
 def menu_page(request):
-    categories = Category.objects.all().order_by("name")
+    categories = Category.objects.filter(
+        is_active=True
+    ).prefetch_related("menu_items")
 
-    items = (
-        MenuItem.objects
-        .filter(is_available=True)
-        .select_related("category")
-        .order_by("category__name", "name")
+    items = MenuItem.objects.filter(
+        is_available=True,
+        category__is_active=True
+    ).select_related("category").order_by(
+        "category__name",
+        "name"
     )
 
     return render(
@@ -22,7 +21,7 @@ def menu_page(request):
         {
             "categories": categories,
             "items": items,
-        },
+        }
     )
 
 

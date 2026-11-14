@@ -1,6 +1,6 @@
 
 from django.db import models
-from django.core.validators import MinValueValidator, MaxValueValidator
+from django.core.validators import MinValueValidator
 
 
 class Category(models.Model):
@@ -8,11 +8,16 @@ class Category(models.Model):
     description = models.TextField(blank=True)
     is_active = models.BooleanField(default=True)
 
+    class Meta:
+        verbose_name_plural = "Categories"
+        ordering = ["name"]
+
     def __str__(self):
         return self.name
 
 
 class MenuItem(models.Model):
+
     class Station(models.TextChoices):
         KITCHEN = "KITCHEN", "Kitchen"
         BAR = "BAR", "Bar"
@@ -20,18 +25,32 @@ class MenuItem(models.Model):
 
     category = models.ForeignKey(
         Category,
-        on_delete=models.PROTECT,
-        related_name="menu_items",
+        on_delete=models.CASCADE,
+        related_name="menu_items"
     )
-    name = models.CharField(max_length=150)
-    description = models.TextField(blank=True)
 
-    price = models.DecimalField(max_digits=10, decimal_places=2)
+    name = models.CharField(max_length=150)
+
+    price = models.DecimalField(
+        max_digits=8,
+        decimal_places=2,
+        validators=[MinValueValidator(0)]
+    )
+
     cost_price = models.DecimalField(
-        max_digits=10,
+        max_digits=8,
         decimal_places=2,
         default=0,
+        validators=[MinValueValidator(0)]
     )
+
+    image = models.ImageField(
+        upload_to="menu_items/",
+        blank=True,
+        null=True
+    )
+
+    is_available = models.BooleanField(default=True)
 
     station = models.CharField(
         max_length=10,
@@ -39,10 +58,10 @@ class MenuItem(models.Model):
         default=Station.KITCHEN,
     )
 
-    is_available = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
+        ordering = ["category__name", "name"]
         constraints = [
             models.UniqueConstraint(
                 fields=["category", "name"],
@@ -64,16 +83,20 @@ class MenuItem(models.Model):
 
 class Modifier(models.Model):
     name = models.CharField(max_length=100)
+
     additional_price = models.DecimalField(
         max_digits=8,
         decimal_places=2,
         default=0,
+        validators=[MinValueValidator(0)]
     )
+
     menu_items = models.ManyToManyField(
         MenuItem,
         related_name="modifiers",
         blank=True,
     )
+
     is_available = models.BooleanField(default=True)
 
     def __str__(self):
@@ -83,15 +106,19 @@ class Modifier(models.Model):
 class Combo(models.Model):
     name = models.CharField(max_length=150, unique=True)
     description = models.TextField(blank=True)
+
     items = models.ManyToManyField(
         MenuItem,
         through="ComboItem",
         related_name="combos",
     )
+
     combo_price = models.DecimalField(
         max_digits=10,
         decimal_places=2,
+        validators=[MinValueValidator(0)]
     )
+
     is_available = models.BooleanField(default=True)
 
     def __str__(self):
@@ -104,10 +131,12 @@ class ComboItem(models.Model):
         on_delete=models.CASCADE,
         related_name="combo_items",
     )
+
     menu_item = models.ForeignKey(
         MenuItem,
         on_delete=models.PROTECT,
     )
+
     quantity = models.PositiveIntegerField(default=1)
 
     class Meta:
@@ -127,6 +156,7 @@ class ComboItem(models.Model):
 
 
 class HappyHourRule(models.Model):
+
     class DiscountType(models.TextChoices):
         PERCENT = "PERCENT", "Percentage"
         FIXED = "FIXED", "Fixed amount off"
@@ -136,7 +166,7 @@ class HappyHourRule(models.Model):
     start_time = models.TimeField()
     end_time = models.TimeField()
 
-    # Weekday numbers: Monday=0 through Sunday=6.
+    # Monday = 0, Sunday = 6
     weekdays = models.JSONField(default=list)
 
     discount_type = models.CharField(
@@ -144,6 +174,7 @@ class HappyHourRule(models.Model):
         choices=DiscountType.choices,
         default=DiscountType.PERCENT,
     )
+
     discount_value = models.DecimalField(
         max_digits=8,
         decimal_places=2,
@@ -157,116 +188,6 @@ class HappyHourRule(models.Model):
     )
 
     is_active = models.BooleanField(default=True)
-
-    def __str__(self):
-        return self.name
-
-class InventoryItem(models.Model):
-
-    class Unit(models.TextChoices):
-        KG = "KG", "Kilogram"
-        GRAM = "GRAM", "Gram"
-        LITRE = "LITRE", "Litre"
-        ML = "ML", "Millilitre"
-        PIECES = "PIECES", "Pieces"
-        PACKETS = "PACKETS", "Packets"
-
-    name = models.CharField(max_length=100, unique=True)
-
-    category = models.CharField(max_length=100)
-
-    quantity = models.DecimalField(
-        max_digits=10,
-        decimal_places=2,
-        default=0
-    )
-
-    unit = models.CharField(
-        max_length=10,
-        choices=Unit.choices,
-        default=Unit.PIECES
-    )
-
-    minimum_stock = models.DecimalField(
-        max_digits=10,
-        decimal_places=2,
-        default=5
-    )
-
-    purchase_price = models.DecimalField(
-        max_digits=10,
-        decimal_places=2,
-        default=0
-    )
-
-    supplier = models.CharField(
-        max_length=150,
-        blank=True
-    )
-
-    last_updated = models.DateTimeField(auto_now=True)
-
-    is_active = models.BooleanField(default=True)
-
-    @property
-    def stock_status(self):
-        if self.quantity <= 0:
-            return "Out of Stock"
-        elif self.quantity <= self.minimum_stock:
-            return "Low Stock"
-        return "Available"
-
-    def __str__(self):
-        return self.name
- 
-class InventoryItem(models.Model):
-
-    class Unit(models.TextChoices):
-        KG = "KG", "Kilogram"
-        GRAM = "GRAM", "Gram"
-        LITRE = "LITRE", "Litre"
-        ML = "ML", "Millilitre"
-        PIECES = "PIECES", "Pieces"
-        PACKETS = "PACKETS", "Packets"
-
-    name = models.CharField(max_length=100, unique=True)
-    category = models.CharField(max_length=100)
-
-    quantity = models.DecimalField(
-        max_digits=10,
-        decimal_places=2,
-        default=0
-    )
-
-    unit = models.CharField(
-        max_length=10,
-        choices=Unit.choices,
-        default=Unit.PIECES
-    )
-
-    minimum_stock = models.DecimalField(
-        max_digits=10,
-        decimal_places=2,
-        default=5
-    )
-
-    purchase_price = models.DecimalField(
-        max_digits=10,
-        decimal_places=2,
-        default=0
-    )
-
-    supplier = models.CharField(max_length=150, blank=True)
-    last_updated = models.DateTimeField(auto_now=True)
-    is_active = models.BooleanField(default=True)
-
-    @property
-    def stock_status(self):
-        if self.quantity <= 0:
-            return "Out of Stock"
-        elif self.quantity <= self.minimum_stock:
-            return "Low Stock"
-        return "Available"
 
     def __str__(self):
         return self.name
